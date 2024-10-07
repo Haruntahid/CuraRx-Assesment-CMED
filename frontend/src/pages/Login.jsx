@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import axios from "axios";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,7 +12,16 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form submitted");
+    const name = e.target.username.value;
+    const password = e.target.password.value;
+
+    const userData = { name, password };
+
+    axios
+      .post("http://localhost:8000/login", userData)
+      .then((res) => console.log(res.data));
+
+    console.log("Form submitted", name, password);
   };
 
   return (
@@ -29,6 +39,7 @@ function Login() {
             </label>
             <input
               type="text"
+              name="username"
               placeholder="Enter your username or email"
               className="w-full px-4 py-2 border border-gray-400 rounded"
               required
@@ -38,6 +49,7 @@ function Login() {
           <div className="mb-4 relative">
             <label className="block text-gray-700 mb-2">Password</label>
             <input
+              name="password"
               type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
               value={password}

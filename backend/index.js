@@ -37,6 +37,35 @@ async function run() {
       res.send(users);
     });
 
+    // login api
+    app.post("/login", async (req, res) => {
+      const userData = req.body;
+      const { name, password } = userData;
+
+      // query for email and username both
+      const userQuery = {
+        $or: [{ email: name }, { username: name }],
+      };
+
+      // find user from user collection
+      const validUser = await userCollections.findOne(userQuery);
+
+      // error for not valid user
+      if (!validUser) {
+        return res.status(401).send({ message: "User not found" });
+      }
+
+      // check password
+      if (validUser.password === password) {
+        return res
+          .status(200)
+          .send({ message: "login successfull", validUser });
+      } else {
+        // handle incorrect password
+        return res.status(401).send({ message: "Incorrect password" });
+      }
+    });
+
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
