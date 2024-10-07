@@ -2,7 +2,9 @@ import { useState } from "react";
 import { CiLogout } from "react-icons/ci";
 import { IoClose, IoMenu } from "react-icons/io5";
 import { Link, NavLink, Outlet } from "react-router-dom";
-import { MdOutlinePostAdd } from "react-icons/md";
+import { RiFileAddFill } from "react-icons/ri";
+import { IoPieChartSharp } from "react-icons/io5";
+import { FaFilePrescription } from "react-icons/fa";
 
 function MainLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -40,9 +42,10 @@ function MainLayout() {
                   : "flex items-center px-3 py-2 text-black transition-colors duration-300 transform rounded-lg bg-blue-400"
               }
             >
-              <MdOutlinePostAdd size={25} />
+              <IoPieChartSharp size={25} />
               <span className="mx-2 font-medium">Overview</span>
             </NavLink>
+
             <NavLink
               to={"/prescription"}
               className={({ isActive }) =>
@@ -51,8 +54,20 @@ function MainLayout() {
                   : "flex items-center px-3 py-2 text-black transition-colors duration-300 transform rounded-lg bg-blue-400"
               }
             >
-              <MdOutlinePostAdd size={25} />
+              <FaFilePrescription size={25} />
               <span className="mx-2 font-medium">Prescriptions</span>
+            </NavLink>
+
+            <NavLink
+              to={"/create-prescription"}
+              className={({ isActive }) =>
+                isActive
+                  ? "flex items-center px-3 py-2 text-white transition-colors duration-300 transform rounded-lg bg-black"
+                  : "flex items-center px-3 py-2 text-black transition-colors duration-300 transform rounded-lg bg-blue-400"
+              }
+            >
+              <RiFileAddFill size={25} />
+              <span className="mx-2 font-medium">Create Prescription</span>
             </NavLink>
           </div>
 
@@ -88,7 +103,7 @@ function MainLayout() {
             <IoMenu size={24} />
           </button>
           <div className="p-5">
-            <p className="text-center font-bold text-5xl">Welcome to CuraRx</p>
+            {/* <p className="text-center font-bold text-5xl">Welcome to CuraRx</p> */}
             <Outlet />
           </div>
         </div>

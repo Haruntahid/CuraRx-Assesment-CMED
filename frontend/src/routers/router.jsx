@@ -3,6 +3,7 @@ import Login from "../pages/Login";
 import MainLayout from "../layout/MainLayout";
 import Overview from "../pages/Overview";
 import Prescription from "../pages/Prescription";
+import CreatePrescription from "../pages/CreatePrescription";
 
 export const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ export const router = createBrowserRouter([
       {
         path: "/prescription",
         element: <Prescription />,
+      },
+      {
+        path: "/create-prescription",
+        element: <CreatePrescription />,
       },
     ],
   },
