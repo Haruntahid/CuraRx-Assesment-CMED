@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { CiLogout } from "react-icons/ci";
 import { IoClose, IoMenu } from "react-icons/io5";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { RiFileAddFill } from "react-icons/ri";
 import { IoPieChartSharp } from "react-icons/io5";
 import { FaFilePrescription } from "react-icons/fa";
+import { AuthContext } from "../provider/AuthProvider";
 
 function MainLayout() {
+  const { logout } = useContext(AuthContext);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   //   toogle bar for mobile view
@@ -74,7 +76,7 @@ function MainLayout() {
           {/* Footer logout btn */}
           <div className="pb-10">
             <button
-              //   onClick={logout}
+              onClick={() => logout()}
               className="flex w-full items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-300 bg-rose-500 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
             >
               <CiLogout size={20} color="#fff" />

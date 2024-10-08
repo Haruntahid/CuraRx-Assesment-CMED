@@ -24,12 +24,15 @@ async function run() {
   try {
     // collections
     const userCollections = client.db("curaRx").collection("users");
+    const prescriptionCollections = client
+      .db("curaRx")
+      .collection("prescriptions");
 
     app.get("/", async (req, res) => {
       res.send("CuraRx server is running");
     });
 
-    // ============= users api's =================
+    // ====================== users api's 👥 ========================
 
     // get all users
     app.get("/users", async (req, res) => {
@@ -52,18 +55,32 @@ async function run() {
 
       // error for not valid user
       if (!validUser) {
-        return res.status(401).send({ message: "User not found" });
+        return res
+          .status(401)
+          .send({ message: "User not found with the username or email" });
       }
 
       // check password
       if (validUser.password === password) {
         return res
           .status(200)
-          .send({ message: "login successfull", validUser });
+          .send({ message: "Login successfull", validUser });
       } else {
         // handle incorrect password
         return res.status(401).send({ message: "Incorrect password" });
       }
+    });
+
+    //======================= prescription releted api's 📃 =========================
+
+    // prescription entry => post
+    app.post("/prescription", async (req, res) => {
+      const newPrescription = req.body;
+
+      const prescriptionEntry = await prescriptionCollections.insertOne(
+        newPrescription
+      );
+      res.status(200).send(prescriptionEntry);
     });
 
     console.log(

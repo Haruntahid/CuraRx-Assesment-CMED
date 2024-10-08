@@ -1,10 +1,13 @@
+import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import Swal from "sweetalert2";
 
 function CreatePrescription() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
 
@@ -14,7 +17,18 @@ function CreatePrescription() {
 
   const onSubmit = (data) => {
     console.log("Form Data:", data);
-    // You can handle form submission here
+
+    axios.post("http://localhost:8000/prescription", data).then((res) => {
+      if (res.data.insertedId) {
+        Swal.fire({
+          icon: "success",
+          title: "Prescription Successfully Created",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    });
+    reset();
   };
 
   const handleNextVisitDateChange = (e) => {
@@ -68,6 +82,14 @@ function CreatePrescription() {
                 pattern: {
                   value: /^[1-9][0-9]*$/,
                   message: "Age must be a valid positive number",
+                },
+                min: {
+                  value: 1,
+                  message: "Age must be at least 1",
+                },
+                max: {
+                  value: 120,
+                  message: "Age cannot be greater than 120",
                 },
               })}
               className="w-full px-4 py-2 border border-gray-400 rounded"
@@ -128,10 +150,10 @@ function CreatePrescription() {
             <input
               type="date"
               {...register("nextVisitDate")}
-              value={nextVisitDate}
+              value={nextVisitDate || ""}
               onChange={handleNextVisitDateChange}
               className="w-full px-4 py-2 border border-gray-400 rounded"
-              min={today} // Disable past dates by setting the min attribute to today
+              min={today}
             />
           </div>
 

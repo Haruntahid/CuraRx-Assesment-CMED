@@ -4,11 +4,16 @@ import MainLayout from "../layout/MainLayout";
 import Overview from "../pages/Overview";
 import Prescription from "../pages/Prescription";
 import CreatePrescription from "../pages/CreatePrescription";
+import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />,
+    element: (
+      <PrivateRoute>
+        <MainLayout />
+      </PrivateRoute>
+    ),
     children: [
       {
         path: "/",
