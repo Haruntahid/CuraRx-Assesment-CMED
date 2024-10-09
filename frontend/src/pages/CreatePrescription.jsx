@@ -18,17 +18,33 @@ function CreatePrescription() {
   const onSubmit = (data) => {
     console.log("Form Data:", data);
 
-    axios.post("http://localhost:8000/prescription", data).then((res) => {
-      if (res.data.insertedId) {
-        Swal.fire({
-          icon: "success",
-          title: "Prescription Successfully Created",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      }
-    });
-    reset();
+    axios
+      .post("http://localhost:8000/prescription", data)
+      .then((res) => {
+        console.log(res);
+        if (res.data._id) {
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Prescription Successfully Created",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          reset();
+        }
+      })
+      .catch((error) => {
+        // Catch the error and display it
+        console.log(error.response.data);
+        if (error.response && error.response.data) {
+          // Error received from backend
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: error.response.data.message || "Something went wrong!",
+          });
+        }
+      });
   };
 
   const handleNextVisitDateChange = (e) => {
@@ -51,6 +67,7 @@ function CreatePrescription() {
               type="date"
               value={today}
               readOnly
+              {...register("prescriptionDate", { value: today })}
               className="w-full px-4 py-2 border border-gray-400 rounded bg-gray-200 text-gray-700"
             />
           </div>
@@ -88,8 +105,8 @@ function CreatePrescription() {
                   message: "Age must be at least 1",
                 },
                 max: {
-                  value: 120,
-                  message: "Age cannot be greater than 120",
+                  value: 100,
+                  message: "Age cannot be greater than 100",
                 },
               })}
               className="w-full px-4 py-2 border border-gray-400 rounded"
@@ -142,7 +159,7 @@ function CreatePrescription() {
             />
           </div>
 
-          {/* Next Visit Date - Only future dates are allowed */}
+          {/* Next Visit Date */}
           <div className="mb-4">
             <label className="block text-gray-700 mb-2">
               Next Visit Date (Optional)
