@@ -5,6 +5,7 @@ import Overview from "../pages/Overview";
 import Prescription from "../pages/Prescription";
 import CreatePrescription from "../pages/CreatePrescription";
 import PrivateRoute from "./PrivateRoute";
+import PrescriptionDetails from "../pages/PrescriptionDetails";
 
 export const router = createBrowserRouter([
   {
@@ -22,6 +23,12 @@ export const router = createBrowserRouter([
       {
         path: "/prescription",
         element: <Prescription />,
+      },
+      {
+        path: "/prescription/:id",
+        element: <PrescriptionDetails />,
+        loader: ({ params }) =>
+          fetch(`http://localhost:8000/all-prescription/${params.id}`),
       },
       {
         path: "/create-prescription",

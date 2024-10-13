@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 function CreatePrescription() {
@@ -14,6 +15,7 @@ function CreatePrescription() {
   // Automatically set today's date
   const today = new Date().toISOString().split("T")[0];
   const [nextVisitDate, setNextVisitDate] = useState("");
+  const navigate = useNavigate();
 
   const onSubmit = (data) => {
     console.log("Form Data:", data);
@@ -30,14 +32,12 @@ function CreatePrescription() {
             showConfirmButton: false,
             timer: 1500,
           });
+          navigate("/prescription");
           reset();
         }
       })
       .catch((error) => {
-        // Catch the error and display it
-        console.log(error.response.data);
         if (error.response && error.response.data) {
-          // Error received from backend
           Swal.fire({
             icon: "error",
             title: "Error",
@@ -54,7 +54,7 @@ function CreatePrescription() {
   return (
     <div className=" h-screen flex justify-center items-center w-full">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
-        <h2 className="text-4xl font-bold mb-6 text-center">
+        <h2 className="text-6xl text-center bg-blue-500 py-6 text-white rounded-lg font-bold mb-4">
           Create Prescription
         </h2>
         <form onSubmit={handleSubmit(onSubmit)}>
