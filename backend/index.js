@@ -218,7 +218,7 @@ app.get("/all-prescription", async (req, res) => {
 });
 
 // get single p[riscription details
-app.get("/all-prescription/:id", async (req, res) => {
+app.get("/prescription/:id", async (req, res) => {
   const id = req.params.id;
   try {
     const result = await Prescription.findById(id);
@@ -229,6 +229,45 @@ app.get("/all-prescription/:id", async (req, res) => {
     }
   } catch (error) {
     res.status(500).send({ message: "Error Prescription", error });
+  }
+});
+
+// delete prescription entry based on id
+app.delete("/delete-prescription/:id", async (req, res) => {
+  const id = req.params.id;
+  console.log(id);
+  try {
+    const query = { _id: id };
+    const result = await Prescription.deleteOne(query);
+    if (result) {
+      res.status(200).send(result);
+    }
+  } catch (error) {
+    res.status(500).send({ message: "Error Delete Prescription", error });
+  }
+});
+
+// update / edit prescription entry basen on id
+app.put("/edit-prescription/:id", async (req, res) => {
+  const { id } = req.params;
+  const editedData = req.body;
+
+  try {
+    // Find the prescription by id and update it
+    const updatedPrescription = await Prescription.findByIdAndUpdate(
+      id,
+      editedData,
+      { new: true, runValidators: true } // Ensure validation on update
+    );
+
+    if (!updatedPrescription) {
+      return res.status(404).json({ message: "Prescription not found" });
+    }
+    res.status(200).json(updatedPrescription);
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      return res.status(400).json({ message: error.message });
+    }
   }
 });
 

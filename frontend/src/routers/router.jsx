@@ -6,6 +6,7 @@ import Prescription from "../pages/Prescription";
 import CreatePrescription from "../pages/CreatePrescription";
 import PrivateRoute from "./PrivateRoute";
 import PrescriptionDetails from "../pages/PrescriptionDetails";
+import EditPrescription from "../components/EditPrescription";
 
 export const router = createBrowserRouter([
   {
@@ -28,7 +29,13 @@ export const router = createBrowserRouter([
         path: "/prescription/:id",
         element: <PrescriptionDetails />,
         loader: ({ params }) =>
-          fetch(`http://localhost:8000/all-prescription/${params.id}`),
+          fetch(`http://localhost:8000/prescription/${params.id}`),
+      },
+      {
+        path: "/edit-prescription/:id",
+        element: <EditPrescription />,
+        loader: ({ params }) =>
+          fetch(`http://localhost:8000/prescription/${params.id}`),
       },
       {
         path: "/create-prescription",
