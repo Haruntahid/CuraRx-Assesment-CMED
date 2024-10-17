@@ -101,6 +101,7 @@ function Prescription() {
         <div className="flex flex-col">
           <label className="text-sm text-gray-600 mb-1">To</label>
           <input
+            min={startDate}
             type="date"
             value={endDate}
             onChange={handleEndDateChange}

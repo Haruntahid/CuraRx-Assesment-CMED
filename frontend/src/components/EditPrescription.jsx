@@ -195,7 +195,7 @@ function EditPrescription() {
                 Next Visit Date (Optional)
               </label>
               <input
-                min={new Date().toISOString().split("T")[0]}
+                min={data?.prescriptionDate}
                 type="date"
                 {...register("nextVisitDate", {
                   validate: (value) =>

@@ -79,14 +79,16 @@ const prescriptionSchema = new mongoose.Schema({
   },
   nextVisitDate: {
     type: Date,
-    validate: {
-      validator: function (value) {
-        if (value) return value > new Date();
-      },
-      message: "Next visit date must be a future date",
-    },
+    // validate: {
+    //   validator: function (value) {
+    //     if (value) return value > new Date();
+    //   },
+    //   message: "Next visit date must be a future date",
+    // },
   },
 });
+
+// verify user middleware
 
 // Create mongoose models
 const User = mongoose.model("User", userSchema);
@@ -172,8 +174,6 @@ app.get("/all-prescription", async (req, res) => {
     startDate,
     endDate,
   } = req.query;
-
-  console.log(startDate, endDate);
 
   try {
     // Build query object
@@ -268,6 +268,47 @@ app.put("/edit-prescription/:id", async (req, res) => {
     if (error.name === "ValidationError") {
       return res.status(400).json({ message: error.message });
     }
+  }
+});
+
+// for overvier
+app.get("/overview", async (req, res) => {
+  const { month } = req.query; // Get the month
+
+  try {
+    // prescriptionDates only
+    const allPrescriptions = await Prescription.find({}, "prescriptionDate");
+
+    // day-wise counts
+    const dayWiseCount = {};
+
+    // Loop all prescriptions
+    allPrescriptions.forEach(({ prescriptionDate }) => {
+      const date = new Date(prescriptionDate);
+      const formattedDate = date.toISOString().split("T")[0]; // YYYY-MM-DD
+      const monthStr = date.getMonth() + 1;
+
+      // If the month matches the query parameter, count it
+      if (!month || month === monthStr) {
+        // If the date is already in the object, increment the count
+        if (dayWiseCount[formattedDate]) {
+          dayWiseCount[formattedDate]++;
+        } else {
+          dayWiseCount[formattedDate] = 1;
+        }
+      }
+    });
+
+    // Convert the dayWiseCount object to an array
+    const result = Object.keys(dayWiseCount).map((date) => ({
+      date,
+      count: dayWiseCount[date],
+    }));
+
+    res.send(result);
+  } catch (error) {
+    console.error("Error fetching prescriptions:", error);
+    res.status(500).send("Server Error");
   }
 });
 
